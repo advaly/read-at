@@ -87,9 +87,9 @@ fn main() {
     // Set return code
     //   Some AT command returns response after OK,
     //   so here we try to find OK in all lines not only the last line.
-    let retcode = match vbuf.clone().into_iter().find(|s| s == "OK") {
-        Some(_s) => 0,
-        None => 3,
+    let retcode = match vbuf.clone().into_iter().find(|s| s == "ERROR") {
+        Some(_s) => 3,
+        None => 0,
     };
 
     // Show datetime if cclk mode
