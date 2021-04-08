@@ -1,2 +1,7 @@
-/target
+/target/*
+!/target/armv7-unknown-linux-musleabihf/
+/target/armv7-unknown-linux-musleabihf/*
+!/target/armv7-unknown-linux-musleabihf/release/
+/target/armv7-unknown-linux-musleabihf/release/*
+!/target/armv7-unknown-linux-musleabihf/release/read-at
 *.lock

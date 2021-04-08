@@ -2,6 +2,7 @@
 ```
 $ cross build --target armv7-unknown-linux-musleabihf --release
 ```
+After build, it is better to strip the binary.
 
 ## How to use
 ```
