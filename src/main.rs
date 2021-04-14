@@ -70,8 +70,8 @@ fn main() {
     let mut reader = BufReader::new(port);
     let mut vbuf: Vec<String> = Vec::new();
 
-    // Read all response
-    for _i in 0..32 {
+    // Read all response until timeout
+    loop {
         let mut line = String::new();
         match reader.read_line(&mut line) {
             Ok(_len) => {
@@ -80,7 +80,14 @@ fn main() {
                     vbuf.push(s.to_string());
                 }
             },
-            Err(_e) => break,
+            Err(e) => {
+                match e.kind() {
+                    // read timeout -> no more data
+                    io::ErrorKind::TimedOut => (),
+                    _ => eprintln!("Error while reading: {}", e),
+                }
+                break;
+            },
         }
     }
 
