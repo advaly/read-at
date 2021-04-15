@@ -5,8 +5,9 @@ $ cross build --target armv7-unknown-linux-musleabihf --release
 After build, it is better to strip the binary.
 
 ## How to use
-```
-read-at 0.0.1
+
+```text
+read-at 0.1.0
 ADVALY SYSTEM Inc.
 AT command writer and reader
 
@@ -28,4 +29,43 @@ OPTIONS:
 
 ARGS:
     <AT command>    AT command
+```
+
+## Exit code
+
+code | description
+-- | --
+0 | Success
+1 | Failed to open the serial port
+2 | Failed to write to the serial port
+3 | Failed to read from the serial port
+4 | Found "ERROR" in response strings
+
+## Examples
+
+#### with echo
+```
+root@armadillo:~# read-at AT+GMR
+AT+GMR
+Revision:1951B01SIM7080G-JC
+OK
+```
+
+#### without echo
+```
+root@armadillo:~# read-at ATE0+GMR
+Revision:1951B01SIM7080G-JC
+OK
+```
+
+#### without result string
+```
+root@armadillo:~# read-at -n ATE0+GMR
+Revision:1951B01SIM7080G-JC
+```
+
+#### read CCLK as date command style
+```
+root@armadillo:~# read-at --cclk ATE0+CCLK?
+2021/04/15 11:13:30
 ```
