@@ -31,6 +31,9 @@ ARGS:
     <AT command>    AT command
 ```
 
+Some device may require tune timing parameters with `-w` or `-t`.
+For example, you may need to add like `-w20` which means wait 20ms for response after sent an AT command request.
+
 ## Exit code
 
 code | description

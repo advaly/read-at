@@ -84,7 +84,10 @@ fn main() {
                 match e.kind() {
                     // read timeout -> no more data
                     io::ErrorKind::TimedOut => (),
-                    _ => eprintln!("Error while reading: {}", e),
+                    _ => {
+                        eprintln!("Error while reading from port: {}", e);
+                        exit(3);
+                    }
                 }
                 break;
             },
@@ -95,7 +98,7 @@ fn main() {
     //   Some AT command returns response after OK,
     //   so here we try to find OK in all lines not only the last line.
     let retcode = match vbuf.clone().into_iter().find(|s| s == "ERROR") {
-        Some(_s) => 3,
+        Some(_s) => 4,
         None => 0,
     };
 
