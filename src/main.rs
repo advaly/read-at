@@ -7,37 +7,41 @@ use std::process::exit;
 
 fn main() {
     let app = App::new("read-at")
-        .version("0.1.0")
+        .version(env!("CARGO_PKG_VERSION"))
         .about("AT command writer and reader")
         .author("ADVALY SYSTEM Inc.")
-        .arg(Arg::with_name("AT command")
+        .arg(Arg::new("AT command")
             .help("AT command")
             .required(true))
-        .arg(Arg::with_name("device")
+        .arg(Arg::new("device")
             .help("Serial port")
-            .short("d")
+            .short('d')
             .default_value("/dev/ttyUSB2"))
-        .arg(Arg::with_name("cclk")
+        .arg(Arg::new("cclk")
             .help("Parse CCLK result and show datetime with format 'yyyy/mm/dd HH:MM:SS'")
             .long("cclk"))
-        .arg(Arg::with_name("no ok")
+        .arg(Arg::new("no ok")
             .help("Do not show 'OK'")
-            .short("n").long("no-ok"))
-        .arg(Arg::with_name("no error")
+            .short('n').long("no-ok"))
+        .arg(Arg::new("no error")
             .help("Do not show 'ERROR'")
-            .short("e").long("no-error"))
-        .arg(Arg::with_name("response wait")
+            .short('e').long("no-error"))
+        .arg(Arg::new("response wait")
             .help("Wait time in milli-seconds for response")
-            .short("w")
+            .short('w')
             .default_value("5"))
-        .arg(Arg::with_name("timeout")
+        .arg(Arg::new("timeout")
             .help("Timeout in milli-seconds for serial port access")
-            .short("t")
+            .short('t')
             .default_value("1"))
-        .arg(Arg::with_name("baud rate")
+        .arg(Arg::new("baud rate")
             .help("Serial baud rate")
-            .short("b")
+            .short('b')
             .default_value("115200"))
+        .arg(Arg::new("error string")
+            .help("Response string to recognize as error")
+            .long("error-string")
+            .default_value("ERROR"))
         .get_matches();
 
     let device = app.value_of("device").unwrap();
@@ -45,6 +49,7 @@ fn main() {
     let response_wait = app.value_of("response wait").unwrap().parse::<u64>().unwrap();
     let baudrate = app.value_of("baud rate").unwrap().parse::<u32>().unwrap();
     let command = app.value_of("AT command").unwrap();
+    let error_str = app.value_of("error string").unwrap();
     let is_cclk = app.is_present("cclk");
 
     // Open serial port
@@ -96,8 +101,8 @@ fn main() {
 
     // Set return code
     //   Some AT command returns response after OK,
-    //   so here we try to find OK in all lines not only the last line.
-    let retcode = match vbuf.clone().into_iter().find(|s| s == "ERROR") {
+    //   so here we try to find error string such as "ERROR" in all lines.
+    let retcode = match vbuf.clone().into_iter().find(|s| s == error_str) {
         Some(_s) => 4,
         None => 0,
     };

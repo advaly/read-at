@@ -1,8 +1,12 @@
 ## How to build
+Assume with following toolchain versions.
+
+- rustc 1.58.1 (db9d1b20b 2022-01-20)
+- cargo 1.60.0-nightly (95bb3c92b 2022-01-18)
+
 ```
 $ cross build --target armv7-unknown-linux-musleabihf --release
 ```
-After build, it is better to strip the binary.
 
 ## How to use
 
